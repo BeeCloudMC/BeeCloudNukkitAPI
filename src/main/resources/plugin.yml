@@ -1,0 +1,5 @@
+name: BeeCloudNukkitAPI
+api-version: 1.0.0
+author: catrainbow
+main: net.fap.beecloud.api.BeeCloudAPI
+version: 1.0.0
