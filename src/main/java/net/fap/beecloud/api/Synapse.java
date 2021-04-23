@@ -1,9 +1,6 @@
 package net.fap.beecloud.api;
 
 import cn.nukkit.network.protocol.DataPacket;
-import cn.nukkit.network.protocol.MovePlayerPacket;
-import net.fap.beecloud.api.network.HandlePacket;
-import net.fap.beecloud.client.TestClient;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,7 +42,7 @@ public class Synapse {
             DatagramPacket dp = new DatagramPacket(bytes, bytes.length);
             ds.receive(dp);
             String pk1 = new String(dp.getData(), 0, dp.getLength());
-            HandlePacket.handlePacket(pk1);
+            BeeCloudAPI.getInstance().handlePacket(pk1);
         }
     }
 
