@@ -11,7 +11,13 @@ import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.scheduler.Task;
 import cn.nukkit.utils.Config;
 
+import java.net.URLEncoder;
+
 public class BeeCloudAPI extends PluginBase implements Listener {
+
+    public static String ENCODING_UTF8 = "UTF-8";
+    public static String ENCODING_GBK = "GBK";
+    public static String ENCODING_GB2312 = "GB2312";
 
     private Synapse synapse;
     private static BeeCloudAPI beeCloudAPI;
@@ -74,6 +80,7 @@ public class BeeCloudAPI extends PluginBase implements Listener {
             String player = event.getPlayer().getName();
             String customPacket = "ServerChatPacket:"+config.getString("server-motd")+":"+player+":"+message;
             synapse.send(customPacket);
+            event.setCancelled();
         }
     }
 
@@ -87,7 +94,23 @@ public class BeeCloudAPI extends PluginBase implements Listener {
         }
         if (packet.contains("ServerChatPacket"))
         {
-
+            if (config.getBoolean("synapse-chat"))
+            {
+                try{
+                    String[] pk2 = packet.split("\\:");
+                    String message = pk2[1];
+                    String message2 = new String(message.getBytes(ENCODING_UTF8), ENCODING_UTF8);
+                    Server.getInstance().broadcastMessage(message2);
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+        if (packet.contains("DisconnectPacket"))
+        {
+            for (Player player : Server.getInstance().getOnlinePlayers().values())
+                player.kick("§cSynapse Server Closed!");
         }
     }
 

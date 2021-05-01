@@ -9,6 +9,8 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
+import static net.fap.beecloud.api.BeeCloudAPI.ENCODING_UTF8;
+
 public class Synapse {
 
     private int port1;
@@ -41,7 +43,7 @@ public class Synapse {
             byte[] bytes = new byte[1024];
             DatagramPacket dp = new DatagramPacket(bytes, bytes.length);
             ds.receive(dp);
-            String pk1 = new String(dp.getData(), 0, dp.getLength());
+            String pk1 = new String(dp.getData(), 0, dp.getLength(),ENCODING_UTF8);
             BeeCloudAPI.getInstance().handlePacket(pk1);
         }
     }
@@ -50,7 +52,7 @@ public class Synapse {
         try{
             DatagramSocket ds = new DatagramSocket();
             new BufferedReader(new InputStreamReader(System.in));
-            byte[] bytes = dataPacket.toString().getBytes();
+            byte[] bytes = dataPacket.toString().getBytes(ENCODING_UTF8);
             InetAddress address = InetAddress.getByName("127.0.0.1");
             DatagramPacket dp = new DatagramPacket(bytes, bytes.length, address, this.port1);
             ds.send(dp);
@@ -65,7 +67,7 @@ public class Synapse {
         try{
             DatagramSocket ds = new DatagramSocket();
             new BufferedReader(new InputStreamReader(System.in));
-            byte[] bytes = packet.getBytes();
+            byte[] bytes = packet.getBytes(ENCODING_UTF8);
             InetAddress address = InetAddress.getByName("127.0.0.1");
             DatagramPacket dp = new DatagramPacket(bytes, bytes.length, address, this.port1);
             ds.send(dp);
