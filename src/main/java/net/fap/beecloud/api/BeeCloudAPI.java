@@ -112,6 +112,36 @@ public class BeeCloudAPI extends PluginBase implements Listener {
             for (Player player : Server.getInstance().getOnlinePlayers().values())
                 player.kick("§cSynapse Server Closed!");
         }
+        if (packet.contains("KickPlayerPacket"))
+        {
+            String[] pk2 = packet.split("\\:");
+            String player = pk2[1];
+            String reason = pk2[2];
+            if (reason==null)this.getServer().getPlayer(player).kick(); else this.getServer().getPlayer(player).kick(reason);
+        }
+        if (packet.contains("TextMessagePacket"))
+        {
+            String[] pk2 = packet.split("\\:");
+            String player = pk2[1];
+            String message = pk2[2];
+            this.getServer().getPlayer(player).sendMessage(message);
+        }
+        if (packet.contains("TextTitlePacket"))
+        {
+            String[] pk2 = packet.split("\\:");
+            String player = pk2[1];
+            if (pk2.length==7)
+            {
+                this.getServer().getPlayer(player).sendTitle(pk2[2],pk2[3],Integer.valueOf(pk2[4]),Integer.valueOf(pk2[5]),Integer.valueOf(pk2[6]));
+            }else{
+                this.getServer().getPlayer(player).sendTitle(pk2[2],pk2[3]);
+            }
+        }
+        if (packet.contains("TextTipPacket"))
+        {
+            String[] pk2 = packet.split("\\:");
+            this.getServer().getPlayer(pk2[1]).sendTip(pk2[2]);
+        }
     }
 
 }

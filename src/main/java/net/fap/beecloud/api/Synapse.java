@@ -1,6 +1,9 @@
 package net.fap.beecloud.api;
 
 import cn.nukkit.network.protocol.DataPacket;
+import net.fap.beecloud.api.event.BeeCloudNukkitPacketSendEvent;
+import net.fap.beecloud.api.event.BeeCloudPacketReceiveEvent;
+import net.fap.beecloud.api.event.BeeCloudPacketSendEvent;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,6 +48,8 @@ public class Synapse {
             ds.receive(dp);
             String pk1 = new String(dp.getData(), 0, dp.getLength(),ENCODING_UTF8);
             BeeCloudAPI.getInstance().handlePacket(pk1);
+            BeeCloudPacketReceiveEvent event = new BeeCloudPacketReceiveEvent(pk1);
+            BeeCloudAPI.getInstance().getServer().getPluginManager().callEvent(event);
         }
     }
 
@@ -56,6 +61,8 @@ public class Synapse {
             InetAddress address = InetAddress.getByName("127.0.0.1");
             DatagramPacket dp = new DatagramPacket(bytes, bytes.length, address, this.port1);
             ds.send(dp);
+            BeeCloudNukkitPacketSendEvent event = new BeeCloudNukkitPacketSendEvent(dataPacket);
+            BeeCloudAPI.getInstance().getServer().getPluginManager().callEvent(event);
             ds.close();
         }catch (Exception e)
         {
@@ -70,6 +77,8 @@ public class Synapse {
             byte[] bytes = packet.getBytes(ENCODING_UTF8);
             InetAddress address = InetAddress.getByName("127.0.0.1");
             DatagramPacket dp = new DatagramPacket(bytes, bytes.length, address, this.port1);
+            BeeCloudPacketSendEvent event = new BeeCloudPacketSendEvent(packet);
+            BeeCloudAPI.getInstance().getServer().getPluginManager().callEvent(event);
             ds.send(dp);
             ds.close();
         }catch (Exception e)
