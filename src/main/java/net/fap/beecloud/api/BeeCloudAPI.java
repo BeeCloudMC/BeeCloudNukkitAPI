@@ -8,6 +8,7 @@ import cn.nukkit.event.player.PlayerChatEvent;
 import cn.nukkit.event.player.PlayerCommandPreprocessEvent;
 import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerQuitEvent;
+import cn.nukkit.inventory.Inventory;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.scheduler.Task;
 import cn.nukkit.utils.Config;
@@ -98,6 +99,7 @@ public class BeeCloudAPI extends PluginBase implements Listener {
     {
         Player player = event.getPlayer();
         String pk = "LoginPacket:"+event.getPlayer().getName()+":"+player.getAddress()+":"+player.getUniqueId()+":"+player.getClientId()+":"+config.getString("server-motd");
+        if (player.isOp()) pk+=":op"; else pk+=":default";
         synapse.send(pk);
     }
 
@@ -107,6 +109,15 @@ public class BeeCloudAPI extends PluginBase implements Listener {
         Player player = event.getPlayer();
         String pk = "QuitPacket:"+player.getName();
         synapse.send(pk);
+        Inventory inventory = player.getInventory();
+        String pk2 = "InventoryPacket:"+player.getName();
+        for (int i=0; i<36; i++)
+            pk2+=":"+inventory.getItem(i).getId();
+        for (int i=0; i<36; i++)
+            pk2+=":"+inventory.getItem(i).count;
+        for (int i=0; i<36; i++)
+            pk2+=":"+inventory.getItem(i).getCustomName();
+        synapse.send(pk2);
     }
 
     @EventHandler
